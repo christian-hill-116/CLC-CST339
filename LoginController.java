@@ -4,8 +4,11 @@ package com.gcu.controllers;
 
 import javax.validation.Valid;
 
+//import com.gcu.business.LoginBusinessService;
+import com.gcu.business.LoginInterface;
 import com.gcu.models.LoginModel;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
+
+    @Autowired
+    private LoginInterface loginService;
     
     @GetMapping("/")
     public String display(Model model){
@@ -33,9 +39,13 @@ public class LoginController {
             return "login";
         }
 
-        System.out.println(String.format("Form with Username of %s and Password of %s", loginModel.getUsername(), loginModel.getPassword()));
+        if(loginService.login(loginModel.getUsername(), loginModel.getPassword())){
+            System.out.println(String.format("Form with Username of %s and Password of %s", loginModel.getUsername(), loginModel.getPassword()));
         
-        return "home";
+            return "home";
+        }
+        return "login";
+        
     }
 
 }
